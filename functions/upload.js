@@ -26,7 +26,14 @@ export async function onRequestPost(context) {
     const formattedDate = new Intl.DateTimeFormat('zh-CN', options).format(timedata);
 
     if (!env.IMG) {
-        return res_img;
+        // return res_img;
+        return new Response(res_img.body, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+            }
+        });
     } else {
         // const newReq = res_img.clone();
         const responseData = await res_img.json();
@@ -38,7 +45,15 @@ export async function onRequestPost(context) {
             await insertImageData(env.IMG, responseData[0].src, Referer, clientIP, 5, formattedDate);
         }
 
-        return Response.json(responseData);
+        // return Response.json(responseData);
+        return new Response(JSON.stringify(responseData), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+            }
+        });
     }
 
 
